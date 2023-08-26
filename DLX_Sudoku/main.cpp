@@ -12,23 +12,69 @@ using namespace std;
 
 class node
 {
-	node* up;
-	node* down;
-	node* left;
-	node* right;
-	header* head;
+	public: 
+		node* up;
+		node* down;
+		node* left;
+		node* right;
+		header* head;
 };
 
-class header : node
+class header : public node
 {
-	int size;
+	public: 
+		int size;
 };
 
 /* Linked list functions */
 
-void insert(node* newNode)
+node* initRoot()
 {
+	node root;
+	root.left = &root;
+	root.right = &root;
+	return &root;
+}
 
+node* initHeader(node* root)
+{
+	header head;
+	head.right = root;
+	head.left = root->left;
+	head.right->left = &head;
+	head.left->right = &head;
+	head.size = 0;
+	return &head;
+}
+
+node* initNode(node* last, header* head)
+{
+	node newnode;
+	// *last doesn't work for some reason? not sure why
+	if (last != NULL)
+	{
+		newnode.left = last;
+		newnode.right = last->right;
+		newnode.left->right = &newnode;
+		newnode.right->left = &newnode;
+	}
+	else
+	{
+		newnode.left = &newnode;
+		newnode.right = &newnode;
+	}
+	newnode.head = head;
+	head->size++;
+	newnode.down = head;
+	newnode.up = head->up;
+	newnode.up->down = &newnode;
+	newnode.down->up = &newnode;
+	return &newnode;
+}
+
+void insert(node* prevNode)
+{
+	
 }
 
 class Sudoku
