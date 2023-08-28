@@ -4,8 +4,6 @@
 #include <array>
 #include <random>
 
-
-
 using namespace std;
 
 /* Doubly linked list classes */
@@ -72,9 +70,72 @@ node* initNode(node* last, header* head)
 	return &newnode;
 }
 
+
+
 void insert(node* prevNode)
 {
 	
+}
+
+/* Test for linked list */
+
+void convertArray2DLXLinkedList(int array[7][7], int rowSize, int columnSize)
+{
+
+}
+
+/* Dancing links algorithms */
+
+//node* solutions
+
+void coverColumn(header* columnHeader)
+{
+	columnHeader->right->left = columnHeader->left;
+	columnHeader->left->right = columnHeader->right;
+
+	for (node* i = columnHeader->down; i->down != columnHeader; i = i->down)
+	{
+		for (node* j = i->right; j != i; j = j->right)
+		{
+			j->down->up = j->up;
+			j->up->down = j->down;
+			j->head->size = j->head->size - 1;
+		}
+	}
+}
+
+void uncoverColumn(header* columnHeader)
+{
+
+}
+
+void dlxSolve(node* root, int k)
+{
+	if (root->right == root)
+	{
+		//print solution;
+		return;
+	}
+
+	node* columnHeader = root->right;
+
+	for (node* r = columnHeader->down; r != columnHeader; r = r->down)
+	{
+		//Add rownode to solution
+		for (node* j = r->right; j != r; j = j->right)
+		{
+			coverColumn(j->head);
+		}
+		dlxSolve(root, k + 1);
+		//r <- Ok: remove rownode from solution
+		columnHeader = r->head;
+		for (node* j = r->left; j != r; j = j->left)
+		{
+			uncoverColumn(j->head);
+		}
+
+	}
+
 }
 
 class Sudoku
@@ -98,7 +159,7 @@ public:
 	void initializeTestZero();
 	void setvalue(int row, int col, int val);
 	void importSudoku();
-	bool theGreatSolver(int row, int col);
+	bool solveSudoku(int row, int col);
 	void clearZeroes();
 	void partClear(int blanks);
 };
@@ -191,7 +252,7 @@ void Sudoku::createSudoku()
 	shuffleGuesses();
 
 	//Fill the empty spaces of the sudoku puzzle 
-	theGreatSolver(0, 0);
+	solve(0, 0);
 
 
 	//Clear away as many spaces as the user desired. 
@@ -316,8 +377,7 @@ void Sudoku::importSudoku() {
 
 
 //Solves the sudoku
-//(I do not know why I chose to call it theGreatSolver. It seemed fun at the time
-bool Sudoku::theGreatSolver(int row, int col) {
+bool Sudoku::solve(int row, int col) {
 	//check if it has passed the limits of the entire grid
 	if (row == 8 && col == 9) {
 		cout << endl << "Sudoku completed!" << endl;
