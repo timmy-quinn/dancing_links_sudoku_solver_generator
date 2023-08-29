@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <random>
+#include <vector>
 
 using namespace std;
 
@@ -15,119 +16,217 @@ class node
 		node* down;
 		node* left;
 		node* right;
-		header* head;
-};
-
-class header : public node
-{
-	public: 
+		node* head;
+		int rowNumber;
 		int size;
+		int columnNumber;
 };
 
 /* Linked list functions */
 
 node* initRoot()
 {
-	node root;
-	root.left = &root;
-	root.right = &root;
-	return &root;
+	node* root = new node();
+	root->left = root;
+	root->right = root;
+	return root;
 }
 
-node* initHeader(node* root)
+node* initHeader(node* root, int number)
 {
-	header head;
-	head.right = root;
-	head.left = root->left;
-	head.right->left = &head;
-	head.left->right = &head;
-	head.size = 0;
-	return &head;
+	node* head = new node();
+	head->right = root;
+	head->left = root->left;
+	head->right->left = head;
+	head->left->right = head;
+	head->size = 0;
+	head->columnNumber = number;
+	head->rowNumber = 0;
+	head->up = head;
+	head->down = head;
+	cout << "[initHeader]: &head: " << &head << "\n";
+	cout << "[initHeader]: root->right: " << root->right << "\n";
+	cout << "[initHeader]: root->left: " << root->left << "\n";
+	return head;
 }
 
-node* initNode(node* last, header* head)
+node* initNode(node* last, node* head, int rowNumber)
 {
-	node newnode;
-	// *last doesn't work for some reason? not sure why
+	node* newnode = new node();
 	if (last != NULL)
 	{
-		newnode.left = last;
-		newnode.right = last->right;
-		newnode.left->right = &newnode;
-		newnode.right->left = &newnode;
+		newnode->left = last;
+		newnode->right = last->right;
+		newnode->left->right = newnode;
+		newnode->right->left = newnode;
 	}
 	else
 	{
-		newnode.left = &newnode;
-		newnode.right = &newnode;
+		newnode->left = newnode;
+		newnode->right = newnode;
 	}
-	newnode.head = head;
-	head->size++;
-	newnode.down = head;
-	newnode.up = head->up;
-	newnode.up->down = &newnode;
-	newnode.down->up = &newnode;
-	return &newnode;
+	newnode->head = head;
+	cout << "Node head: " << newnode->head << "\n";
+	head->size = head->size++;
+	newnode->down = head;
+	newnode->up = head->up;
+	newnode->up->down = newnode;
+	newnode->down->up = newnode;
+	newnode->rowNumber = rowNumber;
+	return newnode;
 }
 
-
-
-void insert(node* prevNode)
-{
-	
-}
 
 /* Test for linked list */
-
-void convertArray2DLXLinkedList(int array[7][7], int rowSize, int columnSize)
+//Prints an 7 by 7 array (for test)
+void print7By7Array(int array[][7])
 {
+	cout << "Array printing" << endl << endl;
+	cout << " -------+-------+-------" << endl;
+	for (int x = 0; x < 7; x++) {
+		for (int y = 0; y < 7; y++) {
+			cout << array[x][y];
+		}
+		//print dividers between each box
+		cout << "\n";
+	}
+}
 
+void printHeaderSizes(node* root)
+{
+	for (node* head = root->right; head != root; head = head->right)
+	{
+		cout << "Column: " << head->columnNumber << " Size: " << head->size << "\n";
+	}
+}
+
+
+node* arrayToDLXLinkedList(int array[7][7], int rowSize, int columnSize)
+{	
+
+	node* dlxRoot = initRoot();
+	node* dlxHead;
+	node* last = NULL;
+
+	for (int col = 0; col < 7; col++)
+	{
+		dlxHead = initHeader(dlxRoot, col);
+		cout << "Header" << col << " initialized\n";
+	}
+	cout << "[arry2dlx]: dlxHead: " << dlxHead << "\n";
+	dlxHead = dlxRoot->right;
+	cout << "[arry2dlx]: dlxHead columnNum: " << dlxHead->columnNumber << "\n";
+	cout << "[arry2dlx]: dlxHead columnNum: " << dlxHead->rowNumber << "\n";
+	for (int row = 0; row < 7; row++)
+	{
+		for (int col = 0; col < 7; col++)
+		{
+			if (array[row][col] == 1)
+			{
+				last = initNode(last, dlxHead, row);
+			}
+			dlxHead = dlxHead->right;
+			if (dlxHead == dlxRoot) dlxHead = dlxHead->right;
+		}
+		last = NULL;
+		
+	}
+
+	printHeaderSizes(dlxRoot);
+
+	return dlxRoot;	
+}
+
+void convertDLX2Array(node* dlxRoot)
+{
+	int array[7][7] = { 0 };
+	for (node* columnHeader = dlxRoot->right; columnHeader != dlxRoot; columnHeader = columnHeader->right)
+	{
+		for (node* r = columnHeader->down; r != columnHeader; r = r->down)
+		{
+			array[r->rowNumber][r->head->columnNumber] = 1;
+		}
+	}
+	print7By7Array(array);
 }
 
 /* Dancing links algorithms */
 
-//node* solutions
+// solutions
+vector <node*> solutions;
 
-void coverColumn(header* columnHeader)
-{
+void coverColumn(struct node* columnHeader)
+{	
+	cout << "Covering column: " << columnHeader->columnNumber << "\n";
+	cout << "Column size: " << columnHeader->size << "\n";
 	columnHeader->right->left = columnHeader->left;
 	columnHeader->left->right = columnHeader->right;
 
-	for (node* i = columnHeader->down; i->down != columnHeader; i = i->down)
+	for (node* i = columnHeader->down; i != columnHeader; i = i->down)
 	{
-		for (node* j = i->right; j != i; j = j->right)
+		cout << "Node i: column: " << i->columnNumber << " row: " << i->rowNumber << "\n";
+		for (node* j = i->right; j->right != i; j = j->right)
 		{
+			cout << "Node j: column: " << j->head->columnNumber << " row: " << j->rowNumber << "\n";
 			j->down->up = j->up;
 			j->up->down = j->down;
-			j->head->size = j->head->size - 1;
+			j->head->size--;
 		}
+		cout << "end of j loop\n";
+
 	}
 }
 
-void uncoverColumn(header* columnHeader)
+void uncoverColumn(struct node* columnHeader)
 {
+	for (node* i = columnHeader->up; i != columnHeader; i = i->up)
+	{
+		for (node* j = i->left; j != i; j = j->left)
+		{
+			j->head->size++;
+			j->down->up = j;
+			j->down->up = j;
+		}
+	}
+	columnHeader->right->left = columnHeader;
+	columnHeader->left->right = columnHeader;
+}
 
+void printSolution()
+{
+	cout << "*******************Printing solution****************\n";
+	for (int i = 0; i < solutions.size(); i++)
+	{	
+		cout << solutions[i]->head->columnNumber;
+		for (node* j = solutions[i]->right; j != solutions[i]; j = j->right)
+		{
+			j->head->columnNumber;
+		}
+	}
+	cout << "\n";
 }
 
 void dlxSolve(node* root, int k)
 {
 	if (root->right == root)
 	{
-		//print solution;
+		printSolution();
 		return;
 	}
 
 	node* columnHeader = root->right;
+	coverColumn(columnHeader);
 
 	for (node* r = columnHeader->down; r != columnHeader; r = r->down)
 	{
-		//Add rownode to solution
+		solutions.push_back(r);//Add rownode to solution
 		for (node* j = r->right; j != r; j = j->right)
 		{
 			coverColumn(j->head);
 		}
 		dlxSolve(root, k + 1);
 		//r <- Ok: remove rownode from solution
+		solutions.pop_back();
 		columnHeader = r->head;
 		for (node* j = r->left; j != r; j = j->left)
 		{
@@ -135,6 +234,7 @@ void dlxSolve(node* root, int k)
 		}
 
 	}
+	uncoverColumn(columnHeader);
 
 }
 
@@ -252,42 +352,11 @@ void Sudoku::createSudoku()
 	shuffleGuesses();
 
 	//Fill the empty spaces of the sudoku puzzle 
-	solve(0, 0);
+	solveSudoku(0, 0);
 
 
 	//Clear away as many spaces as the user desired. 
 	partClear(blanks);
-}
-
-
-//Print the sudoku puzzle
-void Sudoku::printSudoku() {
-	cout << "Sudoku printing" << endl << endl;
-
-	//Print top border
-	cout << " -------+-------+-------" << endl;
-	for (int x = 0; x < 9; x++) {
-		cout << "| ";
-		for (int y = 0; y < 9; y++) {
-			if (matrix[x][y] > 0) {
-				cout << matrix[x][y] << " ";
-			}
-			else {
-				cout << "  ";
-			}
-			if (y == 2 || y == 5 || y == 8) {
-				//print dividers between each box
-				cout << "| ";
-			}
-
-
-		}
-		//print dividers between each box
-		cout << endl;
-		if (x == 2 || x == 5 || x == 8) {
-			cout << " -------+-------+-------" << endl;
-		}
-	}
 }
 
 //Initialize a blank sudoku puzzle. In other words, every space is filled with a zero
@@ -377,7 +446,7 @@ void Sudoku::importSudoku() {
 
 
 //Solves the sudoku
-bool Sudoku::solve(int row, int col) {
+bool Sudoku::solveSudoku(int row, int col) {
 	//check if it has passed the limits of the entire grid
 	if (row == 8 && col == 9) {
 		cout << endl << "Sudoku completed!" << endl;
@@ -403,7 +472,7 @@ bool Sudoku::solve(int row, int col) {
 			{
 
 				setvalue(row, col, guess[guessNum]);
-				if (theGreatSolver(row, col + 1)) {
+				if (solveSudoku(row, col + 1)) {
 					return true;
 				}
 			}
@@ -414,7 +483,7 @@ bool Sudoku::solve(int row, int col) {
 		{
 			//if there is already a value higher than zero in the space 
 			//move on to the next space
-			return theGreatSolver(row, col + 1);
+			return solveSudoku(row, col + 1);
 		}
 
 
@@ -434,42 +503,20 @@ bool Sudoku::solve(int row, int col) {
 
 int main()
 {
-	srand((unsigned)time(NULL));
-	Sudoku a, b;
+	int array[7][7] =
+	{
+	{1, 1, 1, 1, 1, 1, 1},
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 1, 1, 1, 0},
+	{0, 1, 1, 1, 0, 1, 0}
+	};
 
-
-	//uncomment to 
-	//initializes a grid that can be passed to the sudoku solver
-	int grid[9][9] = { {3, 0, 6, 5, 0, 8, 4, 0, 0},
-					   { 5, 2, 0, 0, 0, 0, 0, 0, 0 },
-					   { 0, 8, 7, 0, 0, 0, 0, 3, 1 },
-					   { 0, 0, 3, 0, 1, 0, 0, 8, 0 },
-					   { 9, 0, 0, 8, 6, 3, 0, 0, 5 },
-					   { 0, 5, 0, 0, 9, 0, 6, 0, 0 },
-					   { 1, 3, 0, 0, 0, 0, 2, 5, 0 },
-					   { 0, 0, 0, 0, 0, 0, 0, 7, 4 },
-					   { 0, 0, 5, 2, 0, 6, 3, 0, 0 } };
-	a.setMatrix(grid);
-
-
-	// uncomment the code below to import sudoku from text file
-	//a.importSudoku();
-
-	a.printSudoku();
-
-
-	a.theGreatSolver(0, 0);
-	a.printSudoku();
-
-
-	cout << endl << "A new sudoku puzzle is being created:" << endl;
-	a.createSudoku();
-
-	cout << endl << "Here is your custom sudoku puzzle: " << endl;
-	a.printSudoku();
-
-	cout << "Good luck solving it!" << endl;
-
+	node* root = arrayToDLXLinkedList(array, 7, 7);
+	// convertDLX2Array(root);
+	dlxSolve(root, 0);
 
 	return 0;
 }
