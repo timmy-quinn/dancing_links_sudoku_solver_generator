@@ -6,3 +6,4 @@ A key component of a "valid Sudoku" is that it has only one solution. My previou
 ## Future considerations
 - Adding a grading scale, so that the user can select the difficulty of the puzzle they want generated.
   - Some components that could indicate difficulty include the number of initially blank squares and the number of squares that have forced values or only a few possible options from initial conditions. 
+- Add a GUI with python to show puzzles and solutions

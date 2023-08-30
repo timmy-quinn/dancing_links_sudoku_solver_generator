@@ -1,8 +1,8 @@
 ﻿  main.cpp
-C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(158,29): warning C4099: 'node': type name first seen using 'class' now seen using 'struct'
+C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(149,29): warning C4099: 'node': type name first seen using 'class' now seen using 'struct'
 C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(12,7): message : see declaration of 'node'
-C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(180,31): warning C4099: 'node': type name first seen using 'class' now seen using 'struct'
+C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(169,31): warning C4099: 'node': type name first seen using 'class' now seen using 'struct'
 C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(12,7): message : see declaration of 'node'
-C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(302,15): warning C4244: 'initializing': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(318,15): warning C4244: 'initializing': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(323,15): warning C4244: 'initializing': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(339,15): warning C4244: 'initializing': conversion from 'time_t' to 'unsigned int', possible loss of data
   DLX_Sudoku.vcxproj -> C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\x64\Debug\DLX_Sudoku.exe

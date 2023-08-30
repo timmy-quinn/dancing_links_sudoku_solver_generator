@@ -44,9 +44,6 @@ node* initHeader(node* root, int number)
 	head->rowNumber = 0;
 	head->up = head;
 	head->down = head;
-	cout << "[initHeader]: &head: " << &head << "\n";
-	cout << "[initHeader]: root->right: " << root->right << "\n";
-	cout << "[initHeader]: root->left: " << root->left << "\n";
 	return head;
 }
 
@@ -66,7 +63,6 @@ node* initNode(node* last, node* head, int rowNumber)
 		newnode->right = newnode;
 	}
 	newnode->head = head;
-	cout << "Node head: " << newnode->head << "\n";
 	head->size = head->size++;
 	newnode->down = head;
 	newnode->up = head->up;
@@ -83,11 +79,12 @@ void print7By7Array(int array[][7])
 {
 	cout << "Array printing" << endl << endl;
 	cout << " -------+-------+-------" << endl;
-	for (int x = 0; x < 7; x++) {
-		for (int y = 0; y < 7; y++) {
+	for (int x = 0; x < 7; x++) 
+	{
+		for (int y = 0; y < 7; y++) 
+		{
 			cout << array[x][y];
 		}
-		//print dividers between each box
 		cout << "\n";
 	}
 }
@@ -111,12 +108,8 @@ node* arrayToDLXLinkedList(int array[7][7], int rowSize, int columnSize)
 	for (int col = 0; col < 7; col++)
 	{
 		dlxHead = initHeader(dlxRoot, col);
-		cout << "Header" << col << " initialized\n";
 	}
-	cout << "[arry2dlx]: dlxHead: " << dlxHead << "\n";
 	dlxHead = dlxRoot->right;
-	cout << "[arry2dlx]: dlxHead columnNum: " << dlxHead->columnNumber << "\n";
-	cout << "[arry2dlx]: dlxHead columnNum: " << dlxHead->rowNumber << "\n";
 	for (int row = 0; row < 7; row++)
 	{
 		for (int col = 0; col < 7; col++)
@@ -131,8 +124,6 @@ node* arrayToDLXLinkedList(int array[7][7], int rowSize, int columnSize)
 		last = NULL;
 		
 	}
-
-	printHeaderSizes(dlxRoot);
 
 	return dlxRoot;	
 }
@@ -164,28 +155,30 @@ void coverColumn(struct node* columnHeader)
 
 	for (node* i = columnHeader->down; i != columnHeader; i = i->down)
 	{
-		cout << "Node i: column: " << i->columnNumber << " row: " << i->rowNumber << "\n";
-		for (node* j = i->right; j->right != i; j = j->right)
+		for (node* j = i->right; j != i; j = j->right)
 		{
-			cout << "Node j: column: " << j->head->columnNumber << " row: " << j->rowNumber << "\n";
 			j->down->up = j->up;
 			j->up->down = j->down;
 			j->head->size--;
+			cout << "size of " << j->head->columnNumber << " decreased to " << j->head->size << "\n";
 		}
-		cout << "end of j loop\n";
 
 	}
 }
 
 void uncoverColumn(struct node* columnHeader)
 {
+	cout << "Uncovering column: " << columnHeader->columnNumber << "\n";
+	cout << "Column Size: " << columnHeader->size << "\n";
+	
 	for (node* i = columnHeader->up; i != columnHeader; i = i->up)
 	{
 		for (node* j = i->left; j != i; j = j->left)
 		{
-			j->head->size++;
+			j->head->size = j->head->size + 1;
+			cout << "size of " << j->head->columnNumber << " increased to " << j->head->size << "\n";
 			j->down->up = j;
-			j->down->up = j;
+			j->up->down = j;
 		}
 	}
 	columnHeader->right->left = columnHeader;
@@ -194,23 +187,49 @@ void uncoverColumn(struct node* columnHeader)
 
 void printSolution()
 {
-	cout << "*******************Printing solution****************\n";
+	cout << "*******************Printing solution*****************\n";
 	for (int i = 0; i < solutions.size(); i++)
 	{	
 		cout << solutions[i]->head->columnNumber;
 		for (node* j = solutions[i]->right; j != solutions[i]; j = j->right)
 		{
-			j->head->columnNumber;
+			cout<< j->head->columnNumber;
 		}
+		cout << "\n";
 	}
-	cout << "\n";
+}
+
+void printSolutionRows()
+{
+	cout << "***********************Printing Solution Rows**********************" << "\n";
+	for (int i = 0; i < solutions.size(); i++)
+	{
+		cout << solutions[i]->rowNumber<<"\n";
+	}
+}
+
+void testPrintSolution(node* root)
+{
+	solutions.push_back(root->right->down);
+	cout << "Adding node wih header: " << root->right->down << " to solutions\n";
+	printSolution();
+}
+
+void testCoverUnCoverColumn(node* root)
+{	
+	node* column= root->right;
+	coverColumn(column);
+	convertDLX2Array(root);
+	uncoverColumn(column);
+	convertDLX2Array(root);
 }
 
 void dlxSolve(node* root, int k)
 {
 	if (root->right == root)
 	{
-		printSolution();
+		// printSolution();
+		printSolutionRows();
 		return;
 	}
 
@@ -220,6 +239,7 @@ void dlxSolve(node* root, int k)
 	for (node* r = columnHeader->down; r != columnHeader; r = r->down)
 	{
 		solutions.push_back(r);//Add rownode to solution
+		cout << "Solution pushed: row: " << r->rowNumber << " column: " << r->columnNumber << "\n";
 		for (node* j = r->right; j != r; j = j->right)
 		{
 			coverColumn(j->head);
@@ -227,6 +247,7 @@ void dlxSolve(node* root, int k)
 		dlxSolve(root, k + 1);
 		//r <- Ok: remove rownode from solution
 		solutions.pop_back();
+		cout << "Solution popped row: " << r->rowNumber << " column: " << r->columnNumber << "\n";
 		columnHeader = r->head;
 		for (node* j = r->left; j != r; j = j->left)
 		{
@@ -496,27 +517,26 @@ bool Sudoku::solveSudoku(int row, int col) {
 	return false;
 }
 
-
-
-
-
-
 int main()
 {
 	int array[7][7] =
 	{
-	{1, 1, 1, 1, 1, 1, 1},
-	{0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 1, 1, 1, 0},
-	{0, 1, 1, 1, 0, 1, 0}
+	{0, 0, 0, 0, 1, 1, 1},
+	{1, 0, 1, 0, 1, 1, 1},
+	{0, 1, 0, 1, 0, 0, 0},
+	{1, 0, 1, 0, 0, 0, 0},
+	{0, 0, 0, 1, 1, 1, 1},
+	{1, 1, 1, 0, 0, 0, 0},
+	{0, 0, 0, 1, 1, 1, 1}
 	};
 
 	node* root = arrayToDLXLinkedList(array, 7, 7);
-	// convertDLX2Array(root);
+	convertDLX2Array(root);
+	//testCoverUnCoverColumn(root);
+	// testPrintSolution(root);
 	dlxSolve(root, 0);
+	convertDLX2Array(root);
+
 
 	return 0;
 }
