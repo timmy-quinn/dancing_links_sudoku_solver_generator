@@ -22,11 +22,11 @@ public:
 
 /* Linked list functions */
 
-node* initRoot();
+extern node* initRoot();
 
-node* initHeader(node* root, int number);
+extern node* initHeader(node* root, int number);
 
-node* initNode(node* last, node* head, int rowNumber);
+extern node* initNode(node* last, node* head, int rowNumber);
 
 
 /* Test for linked list */
@@ -38,8 +38,6 @@ node* arrayToDLXLinkedList(int array[7][7], int rowSize, int columnSize);
 void convertDLX2Array(node* dlxRoot);
 
 /* Dancing links algorithms */
-
-// solutions
 
 
 void coverColumn(node* columnHeader);

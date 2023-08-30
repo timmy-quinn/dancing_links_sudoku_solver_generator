@@ -2,9 +2,14 @@
 
 using namespace std;
 
+
+// solutions
+vector<node*> solutions;
+
+
 /* Linked list functions */
 
-node* initRoot()
+extern node* initRoot()
 {
 	node* root = new node();
 	root->left = root;
@@ -12,7 +17,7 @@ node* initRoot()
 	return root;
 }
 
-node* initHeader(node* root, int number)
+extern node* initHeader(node* root, int number)
 {
 	node* head = new node();
 	head->right = root;
@@ -27,9 +32,7 @@ node* initHeader(node* root, int number)
 	return head;
 }
 
-vector<class node*> solutions;
-
-node* initNode(node* last, node* head, int rowNumber)
+extern node* initNode(node* last, node* head, int rowNumber)
 {
 	node* newnode = new node();
 	if (last != NULL)
@@ -60,7 +63,7 @@ node* initNode(node* last, node* head, int rowNumber)
 void print7By7Array(int array[][7])
 {
 	cout << "Array printing" << endl << endl;
-	cout << " -------+-------+-------" << endl;
+	cout << " -----------------" << endl;
 	for (int x = 0; x < 7; x++)
 	{
 		for (int y = 0; y < 7; y++)
@@ -73,7 +76,6 @@ void print7By7Array(int array[][7])
 
 node* arrayToDLXLinkedList(int array[7][7], int rowSize, int columnSize)
 {
-
 	node* dlxRoot = initRoot();
 	node* dlxHead;
 	node* last = NULL;
@@ -95,9 +97,7 @@ node* arrayToDLXLinkedList(int array[7][7], int rowSize, int columnSize)
 			if (dlxHead == dlxRoot) dlxHead = dlxHead->right;
 		}
 		last = NULL;
-
 	}
-
 	return dlxRoot;
 }
 
@@ -120,7 +120,7 @@ void convertDLX2Array(node* dlxRoot)
 // solutions
 
 
-void coverColumn(struct node* columnHeader)
+void coverColumn(node* columnHeader)
 {
 	columnHeader->right->left = columnHeader->left;
 	columnHeader->left->right = columnHeader->right;
@@ -137,7 +137,7 @@ void coverColumn(struct node* columnHeader)
 	}
 }
 
-void uncoverColumn(struct node* columnHeader)
+void uncoverColumn(node* columnHeader)
 {
 	for (node* i = columnHeader->up; i != columnHeader; i = i->up)
 	{
