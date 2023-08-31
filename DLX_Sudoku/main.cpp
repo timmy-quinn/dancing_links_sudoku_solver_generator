@@ -110,25 +110,31 @@ node* sudokuLinkedListCreate()
 
 void disableRow(int rowIndex)
 {
-	for (node* currentNode = rows[rowIndex]; currentNode != rows[rowIndex]; currentNode = currentNode->right)
+	cout << "Disabling row: " << rowIndex << "\n";
+	node* currentNode = rows[rowIndex];
+	do
 	{
 		currentNode->up->down = currentNode->down;
 		currentNode->down->up = currentNode->up;
 		currentNode->up = currentNode;
 		currentNode->down = currentNode;
 		currentNode->head->size--;
-	}
+		currentNode = currentNode->right;
+	} while (currentNode != rows[rowIndex]);
 }
 
 void enableRow(int rowIndex)
 {
-	for (node* currentNode = rows[rowIndex]; currentNode != rows[rowIndex]; currentNode = currentNode->right)
+	node* currentNode = rows[rowIndex];
+	do
 	{
 		currentNode->down = currentNode->head;
 		currentNode->up = currentNode->head->up;
 		currentNode->down->up = currentNode;
 		currentNode->up->down = currentNode;
-	}
+		currentNode = currentNode->right;
+
+	} while (currentNode != rows[rowIndex]);
 }
 
 
@@ -177,11 +183,56 @@ void solutionToSudoku(vector <node *> * solution, sudoku* sudoku)
 
 }
 
+void printDLXRow(int rowNumber, int array[729][324])
+{
+	for (int y = 0; y < 324; y++)
+	{
+		cout << array[rowNumber][y];
+	}
+	cout << "\n";
+
+}
+
+
+void printFullDLXArray(int array[729][324])
+{
+	cout << "Array printing" << endl << endl;
+	cout << " -----------------" << endl;
+	for (int x = 0; x < 729; x++)
+	{
+		cout << "Row: " << x << "\n";
+		for (int y = 0; y < 324; y++)
+		{
+			cout << array[x][y];
+		}
+		cout << "\n";
+	}
+}
+
+void sudokuDLX2Array(node* dlxRoot)
+{
+	int array[729][324] = { 0 };
+	int filledRows;
+	for (node* columnHeader = dlxRoot->right; columnHeader != dlxRoot; columnHeader = columnHeader->right)
+	{
+		for (node* r = columnHeader->down; r != columnHeader; r = r->down)
+		{
+			array[r->rowNumber][r->head->columnNumber] = 1;
+		}
+	}
+	printFullDLXArray(array);
+}
+
+
 int main()
 {
 	cout << "creating linked list\n";
 	node* root = sudokuLinkedListCreate();
 	cout << "link list created\n";
+	for (int i = 0; i < 729; i++)
+	{
+		cout << "row pointer: " << rows[i] << "\n";
+	}
 
 	sudoku solvedPuzzle;
 	sudoku sudokuPuzzle;
@@ -192,14 +243,16 @@ int main()
 
 	cout << "initialing\n";
 	sudokuLinkedListInit(root, &sudokuPuzzle);
-	
+	sudokuDLX2Array(root);
+
+	/*
 	dlxSolve(root, 0);
 
 	vector<vector < node*> >  solutions = getAllSolutions();
 
 	solutionToSudoku(&solutions[0], &solvedPuzzle);
 
-	solvedPuzzle.printSudoku();
+	solvedPuzzle.printSudoku();*/
 
 	return 0;
 }
