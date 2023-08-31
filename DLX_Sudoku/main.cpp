@@ -11,19 +11,34 @@ using namespace std;
 node* columns[324];
 node* rows[729];
 
+// TODO replace vectors with stacks
+vector <sudoku> solvedPuzzles;
 
 //Known sudoku puzzle array for testing
+int testArraySolution[9][9] =
+{
+{1, 2, 3, 6, 7, 8, 9, 4, 5},
+{5, 8, 4, 2, 3, 9, 7, 6, 1},
+{9, 6, 7, 1, 4, 5, 3, 2, 8},
+{3, 7, 2, 4, 6, 1, 5, 8, 9},
+{6, 9, 1, 5, 8, 3, 2, 7, 4},
+{4, 5, 8, 7, 9, 2, 6, 1, 3},
+{8, 3, 6, 9, 2, 4, 1, 5, 7},
+{2, 1, 9, 8, 5, 7, 4, 3, 6},
+{7, 4, 5, 3, 1, 6, 8, 9, 2}
+};
+
 int testArray[9][9] =
 {
-{0, 0, 0, 2, 6, 0, 7, 0, 1},
-{6, 8, 0, 0, 7, 0, 0, 9, 0},
-{1, 9, 0, 0, 0, 4, 5, 0, 0},
-{8, 2, 0, 1, 0, 0, 0, 4, 0},
-{0, 0, 4, 6, 0, 2, 9, 0, 0},
-{0, 5, 0, 0, 0, 3, 0, 2, 8},
-{0, 0, 9, 3, 0, 0, 0, 7, 4},
-{0, 4, 0, 0, 5, 0, 0, 3, 6},
-{7, 0, 3, 0, 1, 8, 0, 0, 0}
+{0, 2, 3, 6, 7, 8, 9, 4, 5},
+{5, 0, 4, 2, 3, 9, 7, 6, 1},
+{9, 6, 7, 1, 4, 5, 3, 2, 8},
+{3, 7, 2, 4, 6, 1, 5, 8, 9},
+{6, 9, 1, 5, 8, 3, 2, 7, 4},
+{4, 5, 8, 7, 9, 2, 6, 1, 3},
+{8, 3, 6, 9, 2, 4, 1, 5, 7},
+{2, 1, 9, 8, 5, 7, 4, 3, 6},
+{7, 4, 5, 3, 1, 6, 8, 9, 2}
 };
 
 int getCellConstraintColumn(int row, int col)
@@ -53,18 +68,24 @@ node* sudokuLinkedListCreate()
 	node* last = NULL;
 	int dlxMatrixRow = 0;
 
+	cout << "creating headers\n";
 	for (int col = 0; col < 324; col++)
 	{
 		dlxHead = initHeader(dlxRoot, col);
-		columns[col];
+		columns[col] = dlxHead;
 	}
+	cout << "headers creater\n";
 
-	for (int row = 0; row < SUDOKU_DIMENSION; row++)
+	for (int row = 0; row < 9; row++)
 	{
-		for (int col = 0; col < SUDOKU_DIMENSION; row++)
+		for (int col = 0; col < 9; col++)
 		{
 			for (int value = 1; value <= 9; value++)
 			{
+				cout << "[Sudoku LL create] current row number: " << dlxMatrixRow << "\n";
+				cout << "value: " << value << "\n";
+				cout << " row: " << row << "\n";
+				cout << "col: " << col << "\n";
 				//create cell constraint
 				last = initNode(last, columns[getCellConstraintColumn(row, col)], dlxMatrixRow);
 				rows[dlxMatrixRow] = last;
@@ -131,17 +152,54 @@ void sudokuLinkedListInit(node* root, sudoku* sudoku)
 	}
 }
 
+int getValue(int linkedListRow)
+{
+	int value = (linkedListRow + 1) % 9;
+	if (value == 0) value = 9;
+	return value;
+}
+
+int getCellNumber(int linkedListRow)
+{
+	return linkedListRow / 9;
+}
+
+void solutionToSudoku(vector <node *> * solution, sudoku* sudoku)
+{
+	int col;
+	int row;
+	for (int i = 0; i < solution->size(); i++)
+	{
+		col = getCellNumber((*solution)[i]->rowNumber) % 9;
+		row = getCellNumber((*solution)[i]->rowNumber) / 9;
+		sudoku->sudokuArray[row][col] = getValue((*solution)[i]->rowNumber);
+	}
+
+}
+
 int main()
 {
-	
+	cout << "creating linked list\n";
 	node* root = sudokuLinkedListCreate();
+	cout << "link list created\n";
 
-	sudoku sudoku;
-	sudoku.copyArray(testArray);
+	sudoku solvedPuzzle;
+	sudoku sudokuPuzzle;
+	
+	cout << "copying array\n";
+	sudokuPuzzle.copyArray(testArray);
+	cout << "done\n";
 
-	sudokuLinkedListInit(root, &sudoku);
+	cout << "initialing\n";
+	sudokuLinkedListInit(root, &sudokuPuzzle);
 	
 	dlxSolve(root, 0);
+
+	vector<vector < node*> >  solutions = getAllSolutions();
+
+	solutionToSudoku(&solutions[0], &solvedPuzzle);
+
+	solvedPuzzle.printSudoku();
 
 	return 0;
 }

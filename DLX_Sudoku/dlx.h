@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 
-
+//TODO do all nodes need columnNumber, size, rowNumber?
 class node
 {
 public:
@@ -22,12 +22,17 @@ public:
 
 /* Linked list functions */
 
+//TODO is extern necessary?
 extern node* initRoot();
 
 extern node* initHeader(node* root, int number);
 
 extern node* initNode(node* last, node* head, int rowNumber);
 
+
+//TODO solution class
+
+vector< vector< node* > > getAllSolutions();
 
 /* Test for linked list */
 //Prints an 7 by 7 array (for test)

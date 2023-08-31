@@ -3,9 +3,14 @@
 using namespace std;
 
 
-// solutions
-vector<node*> solutions;
+// solutions and functions
+vector <node*> solution;
+vector<vector <node*>> allSolutions;
 
+vector<vector<node*>> getAllSolutions()
+{
+	return allSolutions;
+}
 
 /* Linked list functions */
 
@@ -155,10 +160,10 @@ void uncoverColumn(node* columnHeader)
 void printSolution()
 {
 	cout << "*******************Printing solution*****************\n";
-	for (int i = 0; i < solutions.size(); i++)
+	for (int i = 0; i < solution.size(); i++)
 	{
-		cout << solutions[i]->head->columnNumber;
-		for (node* j = solutions[i]->right; j != solutions[i]; j = j->right)
+		cout << solution[i]->head->columnNumber;
+		for (node* j = solution[i]->right; j != solution[i]; j = j->right)
 		{
 			cout << j->head->columnNumber;
 		}
@@ -169,15 +174,15 @@ void printSolution()
 void printSolutionRows()
 {
 	cout << "***********************Printing Solution Rows**********************" << "\n";
-	for (int i = 0; i < solutions.size(); i++)
+	for (int i = 0; i < solution.size(); i++)
 	{
-		cout << solutions[i]->rowNumber << "\n";
+		cout << solution[i]->rowNumber << "\n";
 	}
 }
 
 void testPrintSolution(node* root)
 {
-	solutions.push_back(root->right->down);
+	solution.push_back(root->right->down);
 	printSolution();
 }
 
@@ -196,6 +201,7 @@ void dlxSolve(node* root, int k)
 	{
 		// printSolution();
 		printSolutionRows();
+		allSolutions.push_back(solution);
 		return;
 	}
 
@@ -204,14 +210,14 @@ void dlxSolve(node* root, int k)
 
 	for (node* r = columnHeader->down; r != columnHeader; r = r->down)
 	{
-		solutions.push_back(r);//Add rownode to solution
+		solution.push_back(r);//Add rownode to solution
 		for (node* j = r->right; j != r; j = j->right)
 		{
 			coverColumn(j->head);
 		}
 		dlxSolve(root, k + 1);
 		//r <- Ok: remove rownode from solution
-		solutions.pop_back();
+		solution.pop_back();
 		columnHeader = r->head;
 		for (node* j = r->left; j != r; j = j->left)
 		{
