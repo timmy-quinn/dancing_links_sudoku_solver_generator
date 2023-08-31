@@ -1,3 +1,3 @@
 ﻿  main.cpp
-C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(221,9): warning C4101: 'solvedPuzzle': unreferenced local variable
+C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\main.cpp(215,6): warning C4101: 'filledRows': unreferenced local variable
   DLX_Sudoku.vcxproj -> C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\x64\Debug\DLX_Sudoku.exe
