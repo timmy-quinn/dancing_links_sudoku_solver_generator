@@ -11,6 +11,7 @@ struct sudoku
 	void importSudoku();
 	void copyArray(int array[9][9]);
 	void printSudoku();
+	sudoku* solution;
 };
 
 #endif

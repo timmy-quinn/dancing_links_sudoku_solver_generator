@@ -195,12 +195,13 @@ void testCoverUnCoverColumn(node* root)
 	convertDLX2Array(root);
 }
 
+//TODO choose minimum coloumn
 void dlxSolve(node* root, int k)
 {
 	if (root->right == root)
 	{
 		// printSolution();
-		printSolutionRows();
+		// printSolutionRows();
 		allSolutions.push_back(solution);
 		return;
 	}
@@ -226,5 +227,35 @@ void dlxSolve(node* root, int k)
 
 	}
 	uncoverColumn(columnHeader);
+}
 
+bool dlxGetOneSolution(node* root, int k)
+{
+	if (root->right == root)
+	{
+		allSolutions.push_back(solution);
+		return true;
+	}
+
+	node* columnHeader = root->right;
+	coverColumn(columnHeader);
+
+	for (node* r = columnHeader->down; r != columnHeader && allSolutions.size() < 1; r = r->down)
+	{
+		solution.push_back(r);//Add rownode to solution
+		for (node* j = r->right; j != r; j = j->right)
+		{
+			coverColumn(j->head);
+		}
+		dlxGetOneSolution(root, k + 1);
+		//r <- Ok: remove rownode from solution
+		solution.pop_back();
+		columnHeader = r->head;
+		for (node* j = r->left; j != r; j = j->left)
+		{
+			uncoverColumn(j->head);
+		}
+
+	}
+	uncoverColumn(columnHeader);
 }

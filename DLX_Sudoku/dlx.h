@@ -59,4 +59,6 @@ void testCoverUnCoverColumn(node* root);
 
 void dlxSolve(node* root, int k);
 
+bool dlxGetOneSolution(node* root, int k);
+
 #endif
