@@ -4,16 +4,8 @@ using namespace std;
 
 // solutions and functions
 vector <node*> solution;
-vector <vector <node*>> allSolutions;
-vector <node*> columns;
-vector <node*> columnsRandom;
-unordered_map <int, node*> map; 
+vector <vector <node*>> allSolutions; 
 vector<int> freeColumns; 
-
-int freeColumnsSize()
-{
-	return freeColumns.size();
-}
 
 vector<vector<node*>> getAllSolutions()
 {
@@ -42,8 +34,6 @@ extern node* initHeader(node* root, int number)
 	head->rowNumber = 0;
 	head->up = head;
 	head->down = head;
-	columns.push_back(head);
-	freeColumns.push_back(1);
 	return head;
 }
 
@@ -167,20 +157,6 @@ void uncoverColumn(node* columnHeader)
 	columnHeader->left->right = columnHeader;
 }
 
-//void printSolution()
-//{
-//	cout << "*******************Printing solution*****************\n";
-//	for (int i = 0; i < solution.size(); i++)
-//	{
-//		cout << solution[i]->head->columnNumber;
-//		for (node* j = solution[i]->right; j != solution[i]; j = j->right)
-//		{
-//			cout << j->head->columnNumber;
-//		}
-//		cout << "\n";
-//	}
-//}
-
 void printSolutionRows()
 {
 	cout << "***********************Printing Solution Rows**********************" << "\n";
@@ -188,41 +164,6 @@ void printSolutionRows()
 	{
 		cout << solution[i]->rowNumber << "\n";
 	}
-}
-//
-//void testPrintSolution(node* root)
-//{
-//	solution.push_back(root->right->down);
-//	printSolution();
-//}
-
-void testCoverUnCoverColumn(node* root)
-{
-	node* column = root->right;
-	coverColumn(column);
-	convertDLX2Array(root);
-	uncoverColumn(column);
-	convertDLX2Array(root);
-}
-
-void printColumnNumbers()
-{
-	for (int i = 0; i < columns.size(); i++)
-	{
-		cout << columns[i]->columnNumber << "\n";
-	}
-}
-void randomizeColumnOrder()
-{
-	// Initialize the random_device
-	random_device rd;
-
-	// Seed the engine
-	mt19937_64 generator(rd());
-	
-	columnsRandom = columns;
-
-	shuffle(columnsRandom.begin(), columnsRandom.end(), generator);
 }
 
 node* getShortestColumn(node* root)
@@ -235,25 +176,25 @@ node* getShortestColumn(node* root)
 	return shortestCol; 
 }
 
-node* getRandomUncoveredColumn(node * root)
-{
-	// Initialize the random_device
-	random_device rd;
-
-	// Seed the engine
-	mt19937_64 generator(rd());
-	vector<int> tempColumns = freeColumns;
-	tempColumns.resize(81); 
-	
-
-	// Specify the weighted value of numbers to generate
-	//discrete_distribution<> dist{freeColumns.begin(), freeColumns.end()};
-	discrete_distribution<> dist{freeColumns.begin(), freeColumns.end() };
-
-	int index = dist(generator); 
-	// cout << "Chosen: " << index << "\n";
-	return columns[index];
-}
+//node* getRandomUncoveredColumn(node * root)
+//{
+//	// Initialize the random_device
+//	random_device rd;
+//
+//	// Seed the engine
+//	mt19937_64 generator(rd());
+//	vector<int> tempColumns = freeColumns;
+//	tempColumns.resize(81); 
+//	
+//
+//	// Specify the weighted value of numbers to generate
+//	//discrete_distribution<> dist{freeColumns.begin(), freeColumns.end()};
+//	discrete_distribution<> dist{freeColumns.begin(), freeColumns.end() };
+//
+//	int index = dist(generator); 
+//	// cout << "Chosen: " << index << "\n";
+//	return columns[index];
+//}
 
 void printRandomEvens()
 {
@@ -372,7 +313,6 @@ void dlxGetRandomSolution(node* root, int k)
 	// cout << " Got column number: " << columnHeader->columnNumber << "\n";
 	// cout << "Got column header: " << columnHeader->columnNumber << "\n";
 	coverColumn(columnHeader);
-	freeColumns[columnHeader->columnNumber] = 0;
 
 	for (node* r = columnHeader->down; r != columnHeader && allSolutions.size() < 1; r = r->down)
 	{
@@ -380,7 +320,6 @@ void dlxGetRandomSolution(node* root, int k)
 		for (node* j = r->right; j != r; j = j->right)
 		{
 			coverColumn(j->head);
-			freeColumns[j->head->columnNumber] = 0;
 		}
 		dlxGetRandomSolution(root, k + 1);
 		//r <- Ok: remove rownode from solution
@@ -389,16 +328,8 @@ void dlxGetRandomSolution(node* root, int k)
 		for (node* j = r->left; j != r; j = j->left)
 		{
 			uncoverColumn(j->head);
-			freeColumns[j->head->columnNumber] = 1;
 		}
 
 	}
 	uncoverColumn(columnHeader);
-	freeColumns[columnHeader->columnNumber] = 1; 
-
-	/*for (int i = 0; i < freeColumns.size(); i++)
-	{
-		cout << " " << freeColumns[i] << " "; 
-	}
-	cout << " \n";*/
 }

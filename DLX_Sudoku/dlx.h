@@ -58,15 +58,9 @@ void printSolutionRows();
 
 void testPrintSolution(node* root);
 
-void testCoverUnCoverColumn(node* root);
-
 void printRandomEvens();
 
-node* getRandomUncoveredColumn(node* root);
-
 void dlxSolve(node* root, int k);
-
-void printColumnNumbers(); 
 
 void dlxGetOneSolution(node* root, int k);
 
