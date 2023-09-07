@@ -295,13 +295,10 @@ void dlxSolve(node* root, int k)
 	if (root->right == root)
 	{
 		allSolutions.push_back(solution);
-		cout << " *****************************************Solution found*********************************************\n";
 		return;
 	}
 
 	node* columnHeader = getShortestColumn(root);
-	if (columnHeader->columnNumber == 80) cout << "column 80 \n";
-	if (columnHeader->columnNumber > 80) cout << "column: " << columnHeader->columnNumber << " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
 	// cout << "chosen: " << columnHeader->columnNumber << "\n";
 	coverColumn(columnHeader);
 
@@ -329,6 +326,7 @@ void dlxGetOneSolution(node* root, int k)
 {
 	if (root->right == root)
 	{
+		cout << "solution found \n";
 		allSolutions.push_back(solution);
 		return;
 	}

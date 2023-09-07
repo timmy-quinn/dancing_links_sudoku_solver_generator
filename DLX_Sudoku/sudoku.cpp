@@ -183,7 +183,7 @@ void sudoku::setCell(int cellNumber, int value)
 }
 
 //Initializes a sudoku linked list with a specific puzzle
-void sudoku::sudokuLinkedListInit(node* root)
+void sudoku::sudokuLinkedListInit()
 {
 	int dlxMatrixRow = 0;
 	for (int row = 0; row < 9; row++)
@@ -256,10 +256,8 @@ void sudoku::randomSudokuInit()
 	random_device rd;
 	int boxeNumbers[2][3] = { {0, 4, 8}, {2, 4, 6} };
 
-
 	// Seed the engine
 	mt19937_64 generator(rd());
-
 
 	int choice = getRandomInt(0, 1);
 
@@ -272,7 +270,9 @@ void sudoku::randomSudokuInit()
 
 void sudoku::solveSudoku()
 {
-	if (root == NULL) root = sudokuLinkedListCreate();
+	cout << "root : " << root << " \n";
+	root = sudokuLinkedListCreate();
+	sudokuLinkedListInit();
 	dlxSolve(root, 0);
 	solutions = getAllSolutions();
 	numberSolutions = solutions.size();
@@ -280,19 +280,20 @@ void sudoku::solveSudoku()
 
 void sudoku::generateRandomSudoku()
 {
+	cout << "Generating random solution\n"; 
 	solutions.clear(); 
 	numberSolutions = NULL; 
-	cout << "creating sudoku ECM;"; 
-	if (root == NULL) root = sudokuLinkedListCreate(); 
-	cout << "Initiallizing sudoku random ECM"; 
+	root = sudokuLinkedListCreate(); 
 	randomSudokuInit();
 	dlxGetOneSolution(root, 0);
 	solutions = getAllSolutions();
+	solutionToSudoku(&solutions[0]);
 	numberSolutions = solutions.size();
 }
 
 void sudoku::printSolutions()
 {
+	cout << "Printing sudoku solutions \n\n"; 
 	if (solutions.size() == 1) printSolvedSudoku();
 	else
 	{
