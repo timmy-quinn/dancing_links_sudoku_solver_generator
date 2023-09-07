@@ -34,8 +34,8 @@ struct sudoku
 		void setCell(int cellNumber, int value);
 		void setBox(int boxNumber, vector<int> values);
 
-		node* sudokuLinkedListCreate();
-		void sudokuLinkedListInit();
+		node* sudokuECMCreate();
+		void sudokuECMInit();
 		void solutionToSudoku(vector <node*>* solution);
 		void randomSudokuInit();
 	

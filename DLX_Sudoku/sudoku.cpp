@@ -92,7 +92,7 @@ int sudoku::getBoxConstraintColumn(int row, int col, int value)
 	return ((row / 3) * 3 + col / 3) * 9 + value + 242;
 }
 
-node* sudoku::sudokuLinkedListCreate()
+node* sudoku::sudokuECMCreate()
 {
 	node* dlxRoot = initRoot();
 	node* dlxHead;
@@ -183,7 +183,7 @@ void sudoku::setCell(int cellNumber, int value)
 }
 
 //Initializes a sudoku linked list with a specific puzzle
-void sudoku::sudokuLinkedListInit()
+void sudoku::sudokuECMInit()
 {
 	int dlxMatrixRow = 0;
 	for (int row = 0; row < 9; row++)
@@ -271,8 +271,8 @@ void sudoku::randomSudokuInit()
 void sudoku::solveSudoku()
 {
 	cout << "root : " << root << " \n";
-	root = sudokuLinkedListCreate();
-	sudokuLinkedListInit();
+	root = sudokuECMCreate();
+	sudokuECMInit();
 	dlxSolve(root, 0);
 	solutions = getAllSolutions();
 	numberSolutions = solutions.size();
@@ -283,7 +283,7 @@ void sudoku::generateRandomSudoku()
 	cout << "Generating random solution\n"; 
 	solutions.clear(); 
 	numberSolutions = NULL; 
-	root = sudokuLinkedListCreate(); 
+	root = sudokuECMCreate(); 
 	randomSudokuInit();
 	dlxGetOneSolution(root, 0);
 	solutions = getAllSolutions();
