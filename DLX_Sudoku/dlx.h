@@ -4,6 +4,11 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <random>
+#include <unordered_set>
+#include <unordered_map>
+#include "random_int.h"
+
 using namespace std;
 
 //TODO do all nodes need columnNumber, size, rowNumber?
@@ -43,13 +48,11 @@ node* arrayToDLXLinkedList(int array[7][7], int rowSize, int columnSize);
 void convertDLX2Array(node* dlxRoot);
 
 /* Dancing links algorithms */
-
+int freeColumnsSize();
 
 void coverColumn(node* columnHeader);
 
 void uncoverColumn(node* columnHeader);
-
-void printSolution();
 
 void printSolutionRows();
 
@@ -57,8 +60,16 @@ void testPrintSolution(node* root);
 
 void testCoverUnCoverColumn(node* root);
 
+void printRandomEvens();
+
+node* getRandomUncoveredColumn(node* root);
+
 void dlxSolve(node* root, int k);
 
-bool dlxGetOneSolution(node* root, int k);
+void printColumnNumbers(); 
+
+void dlxGetOneSolution(node* root, int k);
+
+void dlxGetRandomSolution(node* root, int k);
 
 #endif

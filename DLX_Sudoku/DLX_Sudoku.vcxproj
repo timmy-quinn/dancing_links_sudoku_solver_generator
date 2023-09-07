@@ -135,9 +135,11 @@
     <ClCompile Include="dlx.cpp" />
     <ClCompile Include="dlx.h" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="random_int.cpp" />
     <ClCompile Include="sudoku.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="random_int.h" />
     <ClInclude Include="sudoku.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,2 +1,5 @@
 ﻿  main.cpp
+  sudoku.cpp
+  Generating Code...
+x64\Debug\dlx.obj : warning LNK4042: object specified more than once; extras ignored
   DLX_Sudoku.vcxproj -> C:\Users\tquin\OneDrive\Documents\Projects\DLX Sudoku Solver and Generator\DLX_Sudoku\x64\Debug\DLX_Sudoku.exe

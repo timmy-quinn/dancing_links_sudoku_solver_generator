@@ -27,9 +27,15 @@
     <ClCompile Include="sudoku.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="random_int.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sudoku.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="random_int.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

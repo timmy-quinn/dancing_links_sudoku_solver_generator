@@ -40,13 +40,20 @@ void sudoku::copyArray(int array[9][9])
 
 void sudoku::printSudoku()
 {
+	cout << "\n";
 	for (int row = 0; row < 9; row++)
 	{
 		for (int col = 0; col < 9; col++)
 		{
-			cout << sudokuArray[row][col];
+			if (sudokuArray[row][col] > 0 && sudokuArray[row][col] <= 9) cout << sudokuArray[row][col];
+			else cout << " "; 
 		}
 		cout << "\n";
 	}
 
 }
+
+
+
+
+
