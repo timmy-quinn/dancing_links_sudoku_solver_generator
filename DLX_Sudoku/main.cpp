@@ -15,25 +15,8 @@ node* rows[729];
 
 vector <sudoku> solvedPuzzles;
 
-int blankArray[9][9];
-
 //****Display solutions functions ********
-void printFullDLXArray(int array[729][324])
-{
-	cout << "Array printing" << endl << endl;
-	cout << " -----------------" << endl;
-	for (int x = 0; x < 729; x++)
-	{
-		cout << "Row: " << x << "\n";
-		for (int y = 0; y < 324; y++)
-		{
-			cout << array[x][y];
-		}
-		cout << "\n";
-	}
-}
-
-void sudokuDLX2Array(node* dlxRoot)
+void sudokuECM2Array(node* dlxRoot)
 {
 	int array[729][324] = { 0 };
 	for (node* columnHeader = dlxRoot->right; columnHeader != dlxRoot; columnHeader = columnHeader->right)
@@ -43,7 +26,6 @@ void sudokuDLX2Array(node* dlxRoot)
 			array[r->rowNumber][r->head->columnNumber] = 1;
 		}
 	}
-	printFullDLXArray(array);
 }
 
 // Known sudoku puzzle array for testing. Temporary
@@ -210,11 +192,6 @@ int getValue(int linkedListRow)
 	return value;
 }
 
-int getCellNumber(int linkedListRow)
-{
-	return linkedListRow / 9;
-}
-
 //Convert the exact cover matrix to a sudoku array
 void solutionToSudoku(vector <node *> * solution, sudoku* sudoku)
 {
@@ -222,8 +199,8 @@ void solutionToSudoku(vector <node *> * solution, sudoku* sudoku)
 	int row;
 	for (int i = 0; i < solution->size(); i++)
 	{
-		col = getCellNumber((*solution)[i]->rowNumber) % 9;
-		row = getCellNumber((*solution)[i]->rowNumber) / 9;
+		col = ((*solution)[i]->rowNumber / 9) % 9;
+		row = ((*solution)[i]->rowNumber /9) / 9;
 		sudoku->sudokuArray[row][col] = getValue((*solution)[i]->rowNumber);
 	}
 
@@ -241,66 +218,25 @@ void printDLXRow(int rowNumber, int array[729][324])
 
 // *** Sudoku generation functions
 
-int getRandomInt(int min, int max)
-{
-	// Initialize the random_device
-	random_device rd;
-
-	// Seed the engine
-	mt19937_64 generator(rd());
-
-	// Specify the range of numbers to generate, in this case [min, max]
-	uniform_int_distribution<int> dist{min, max};
-
-	return dist(generator);
-}
-
-bool compareRows(int rowIndex, vector<int>* compareRows)
-{
-	node* row = rows[rowIndex];
-	for (int i = 0; i < compareRows->size(); i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			if (row->head->columnNumber == rows[(*compareRows)[i]]->head->columnNumber)
-			{
-				return false;
-			}
-		}
-	}
-	return true;
-}
 
 void setBox(int boxNumber, vector<int> values)
 {
 	int array[9] = { 0 };
 	int arrayIndex = 0;
-	// box number initial: 0, 3, 6, 27, 30, 33
-	int row = (boxNumber / 3) *3; 
-	int col = ( boxNumber % 3 ) * 3; 
-	int cellNumber = row * 9 + col; 
-
-	cout << "CellNumber: " << cellNumber << "\n";
+	// box number initial: 0, 3, 6, 27, 30, 33 
+	int cellNumber = (boxNumber / 3) * 27 + (boxNumber % 3) * 3;
 	int index = 0; 
 	for ( int i = 0; i < 3; i++ ) 
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			// setCell(cellNumber, values[index]);
-			cout << "cell set: " << cellNumber << " to " << values[index] << " \n";
-			// array[index] = values[index];
-			blankArray[row + j][col + i] = values[index];
+			setCell(cellNumber, values[index] - 1);
 			index++; 
 			cellNumber++;
 		}
 		cellNumber += 6; 
 	}
 	
-	for (int k = 0; k < 9; k++)
-	{
-		if (k % 3 == 0) cout << "\n"; 
-		cout << " " << array[k] << " ";
-	}
 }
 
 //TODO cleanup randomSudokuInit
@@ -327,49 +263,40 @@ void randomSudokuInit()
 	}
 }
 
-
+int generateRandomSudoku()
+{
+	// 1. create filled sudoku
+	// 2. empty sudoku until there is given number of blank cells and only one valid solution
+	// 3. solution to sudoku
+	return 3; 
+}
 
 
 int main()
 {
-	int array[7][7] = {
-		{1, 0, 0, 1, 0, 1, 0},
-		{1, 0, 0, 0, 1, 0, 1},
-		{0, 1, 0, 1, 0, 1, 0},
-		{0, 1, 0, 0, 1, 0, 1},
-		{0, 0, 1, 0, 0, 0, 0},
-		{0, 0, 1, 0, 0, 0, 0},
-		{1, 0, 1, 0, 0, 0, 0},
-	};
 
-
+	sudoku sudokuA; 
+	sudokuA.generateRandomSudoku();
+	sudokuA.printSolutions(); 
 	/*node* root = arrayToDLXLinkedList(array, 7, 7);
 	dlxGetRandomSolution(root, 0);
 	convertDLX2Array(root);*/
-	cout << "creating linked list\n";
+	/*cout << "creating linked list\n";
 	node* root = sudokuLinkedListCreate();
 	cout << "linked list created\n";
-
-	 sudoku solvedPuzzle;
-	 sudoku initialPuzzle;
+	sudoku solvedPuzzle;
 	
-	cout << "copying array\n";
 	
+	cout << "initializing random sudoku \n";
 	randomSudokuInit(); 
-	initialPuzzle.copyArray(blankArray);
-	initialPuzzle.printSudoku();
-	sudokuLinkedListInit(root, &initialPuzzle);
-
-
-
-	//cout << "random sudoku initialized\n";
-	//cout << "free columns size: " << freeColumnsSize();
+	cout << "random sudoku initialized \n";*/
+	// sudokuLinkedListInit(root, &initialPuzzle);
 
 	// dlxGetRandomSolution(root, 0);
 	// dlxSolve(root, 0);
-	dlxGetOneSolution(root, 0);
+	// dlxGetOneSolution(root, 0);
 
-	vector<vector < node*> >  solutions = getAllSolutions();
+	/*vector<vector < node*> >  solutions = getAllSolutions();
 	cout << "Solutions found: " << solutions.size();
 	
 	for (int i = 0; i < solutions.size(); i++)
@@ -379,21 +306,6 @@ int main()
 		solvedPuzzle.printSudoku();
 	}
 
-	cout << "finding random solution \n"; 
-	dlxGetRandomSolution(root, 0); 
-
-	cout << "Random solution found " << "\n"; 
-
-	solutions = getAllSolutions();
-	cout << "Solutions found: " << solutions.size();
-
-	for (int i = 0; i < solutions.size(); i++)
-	{
-		cout << "\n Sudoku Solution: " << i << "\n";
-		solutionToSudoku(&solutions[i], &solvedPuzzle);
-		solvedPuzzle.printSudoku();
-	}
-
-
+	cout << "finding random solution \n"; */
 	return 0;
 }
