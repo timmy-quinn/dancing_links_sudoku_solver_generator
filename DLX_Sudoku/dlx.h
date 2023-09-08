@@ -35,28 +35,17 @@ extern node* initHeader(node* root, int number);
 extern node* initNode(node* last, node* head, int rowNumber);
 
 
-//TODO solution class
+//TODO add solution class or struct
 
 vector< vector< node* > > getAllSolutions();
 
-/* Test for linked list */
-//Prints an 7 by 7 array (for test)
-void print7By7Array(int array[][7]);
-
-node* arrayToDLXLinkedList(int array[7][7], int rowSize, int columnSize);
-
-void convertDLX2Array(node* dlxRoot);
-
-/* Dancing links algorithms */
-int freeColumnsSize();
+void clearAllSolutions();
 
 void coverColumn(node* columnHeader);
 
 void uncoverColumn(node* columnHeader);
 
 void printSolutionRows();
-
-void testPrintSolution(node* root);
 
 void printRandomEvens();
 

@@ -27,9 +27,11 @@ struct sudoku
 		int getRowConstraintColumn(int row, int value);
 		int getColConstraintColumn(int col, int value);
 		int getBoxConstraintColumn(int row, int col, int value);
+		//get value 
 		int getValue(int linkedListRow);
 	
 		void enableRow(int rowIndex);
+		void resetCell(int rowIndex);
 		void disableRow(int rowIndex);
 		void setCell(int cellNumber, int value);
 		void setBox(int boxNumber, vector<int> values);
@@ -37,11 +39,12 @@ struct sudoku
 		node* sudokuECMCreate();
 		void sudokuECMInit();
 		void solutionToSudoku(vector <node*>* solution);
-		void randomSudokuInit();
+		void randomECMInit();
+		bool eraseCells(int index, int blankCells, int targetNum, vector<int>* cells);
 	
 	public:
 		void solveSudoku();
-		void generateRandomSudoku();
+		void generateRandomSudoku(int blankSquares);
 		void printSolutions();
 };
 

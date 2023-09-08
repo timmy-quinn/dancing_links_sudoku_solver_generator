@@ -166,6 +166,24 @@ void sudoku::enableRow(int rowIndex)
 	} while (currentNode != rows[rowIndex]);
 }
 
+//reenables row in ECM. It takes as an argument 
+void sudoku::resetCell(int rowIndex)
+{
+	node* startNode = rows[rowIndex]; 
+	for (node* currentNode = startNode; currentNode->rowNumber % 9 != 8; currentNode = currentNode->down)
+	{
+		do
+		{
+			currentNode->down = rows[currentNode->rowNumber];
+			currentNode->up = currentNode->head->up;
+			currentNode->down->up = currentNode;
+			currentNode->up->down = currentNode;
+			currentNode = currentNode->right;
+
+		} while (currentNode != rows[rowIndex]);
+	}
+}
+
 //TODO use set cell in linked list init
 /*Parameters
 *	cellNumber: 0-80;
@@ -246,8 +264,7 @@ void sudoku::setBox(int boxNumber, vector<int> values)
 
 }
 
-//TODO cleanup randomSudokuInit
-void sudoku::randomSudokuInit()
+void sudoku::randomECMInit()
 {
 	int dlxMatrixRow = 0;
 	vector<int> values = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -268,32 +285,9 @@ void sudoku::randomSudokuInit()
 	}
 }
 
-void sudoku::solveSudoku()
-{
-	cout << "root : " << root << " \n";
-	root = sudokuECMCreate();
-	sudokuECMInit();
-	dlxSolve(root, 0);
-	solutions = getAllSolutions();
-	numberSolutions = solutions.size();
-}
-
-void sudoku::generateRandomSudoku()
-{
-	cout << "Generating random solution\n"; 
-	solutions.clear(); 
-	numberSolutions = NULL; 
-	root = sudokuECMCreate(); 
-	randomSudokuInit();
-	dlxGetOneSolution(root, 0);
-	solutions = getAllSolutions();
-	solutionToSudoku(&solutions[0]);
-	numberSolutions = solutions.size();
-}
-
 void sudoku::printSolutions()
 {
-	cout << "Printing sudoku solutions \n\n"; 
+	cout << "Printing sudoku solutions \n\n";
 	if (solutions.size() == 1) printSolvedSudoku();
 	else
 	{
@@ -306,9 +300,77 @@ void sudoku::printSolutions()
 	}
 }
 
+bool sudoku::eraseCells(int index, int blankCells, int targetNum, vector<int>* cells)
+{
+	if ( blankCells == targetNum) return true;
+	if (index == 81) return false; 
 
+	int row = (*cells)[index] / 9; 
+	int col = (*cells)[index] % 9;
+	int value = sudokuArray[row][col];  
+	sudokuArray[row][col] = 0; 
+	
+	blankCells++; 
+	index++; 
+	while (index != 81)
+	{
+		sudokuECMInit();
+		clearAllSolutions(); 
+		dlxSolve(root, 0);
 
+		solutions = getAllSolutions();
+		numberSolutions = solutions.size(); 
+		if (numberSolutions > 1) return false; 
+		if(eraseCells(index, blankCells, targetNum, cells)) return true;
+		index++; 
+	}
+	sudokuArray[row][col] = value;
+	return false; 
+}
 
+void sudoku::solveSudoku()
+{
+	//clear all solutions so no extraneous solutiosn get pushed to the vector
+	clearAllSolutions();
+	root = sudokuECMCreate();
+	sudokuECMInit();
+	dlxSolve(root, 0);
+	solutions = getAllSolutions();
+	numberSolutions = solutions.size();
+	solutionToSudoku(&solutions[0]);
+	cout << "num Solutions " << numberSolutions << "\n"; 
+}
 
+void sudoku::generateRandomSudoku(int targetNum)
+{
+	// generate solved sudoku; 
+	cout << "Generating random solution\n";
+	solutions.clear();
+	clearAllSolutions();
+	numberSolutions = NULL;
+	root = sudokuECMCreate();
+	randomECMInit();
+	dlxGetOneSolution(root, 0);
+	solutions = getAllSolutions();
+	solutionToSudoku(&solutions[0]);
+	numberSolutions = solutions.size();
 
+	vector<int> cells; 
+	for (int i = 0; i < 81; i++)
+	{
+		cells.push_back(i);
+	}
 
+	//Shuffle this array. This gives us a way to randomly select spaces to be cleared
+	random_device rd;
+
+	// Seed the engine
+	mt19937_64 generator(rd());
+
+	shuffle(cells.begin(), cells.end(), generator);
+	
+	// generate empty sudoku
+	copyArray(solvedArray); 
+	sudokuECMInit(); 
+	eraseCells(0, 0, targetNum, &cells); 
+}
