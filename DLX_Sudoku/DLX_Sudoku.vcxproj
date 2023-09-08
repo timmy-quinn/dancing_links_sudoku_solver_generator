@@ -142,6 +142,10 @@
     <ClInclude Include="random_int.h" />
     <ClInclude Include="sudoku.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="sudoku1.txt" />
+    <Text Include="sudoku2.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

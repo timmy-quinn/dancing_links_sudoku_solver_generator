@@ -132,25 +132,22 @@ node* getShortestColumn(node* root)
 	return shortestCol; 
 }
 
-//node* getRandomUncoveredColumn(node * root)
-//{
-//	// Initialize the random_device
-//	random_device rd;
-//
-//	// Seed the engine
-//	mt19937_64 generator(rd());
-//	vector<int> tempColumns = freeColumns;
-//	tempColumns.resize(81); 
-//	
-//
-//	// Specify the weighted value of numbers to generate
-//	//discrete_distribution<> dist{freeColumns.begin(), freeColumns.end()};
-//	discrete_distribution<> dist{freeColumns.begin(), freeColumns.end() };
-//
-//	int index = dist(generator); 
-//	// cout << "Chosen: " << index << "\n";
-//	return columns[index];
-//}
+node* getRandomShortestColumn(node* root)
+{
+	vector<node*> shortestCols; 
+	shortestCols.push_back(root->right); 
+	for (node* c = root->right; c != root; c = c->right)
+	{
+		if (c->size == shortestCols[0]->size) shortestCols.push_back(c);
+		else if (c->size < shortestCols[0]->size)
+		{
+			shortestCols.clear(); 
+			shortestCols.push_back(c);
+		}
+	}
+
+	return shortestCols[getRandomInt(0, shortestCols.size() - 1)];
+}
 
 void printRandomEvens()
 {
@@ -258,13 +255,11 @@ void dlxGetRandomSolution(node* root, int k)
 {
 	if (root->right == root)
 	{
-		cout << "******************************one solution found**********************\n";
-		printSolutionRows();
 		allSolutions.push_back(solution);
 		return;
 	}
 
-	node* columnHeader = getShortestColumn(root);
+	node* columnHeader = getRandomShortestColumn(root);
 	// cout << " Got column number: " << columnHeader->columnNumber << "\n";
 	// cout << "Got column header: " << columnHeader->columnNumber << "\n";
 	coverColumn(columnHeader);

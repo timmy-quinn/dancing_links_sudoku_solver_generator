@@ -39,4 +39,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="sudoku1.txt" />
+    <Text Include="sudoku2.txt" />
+  </ItemGroup>
 </Project>

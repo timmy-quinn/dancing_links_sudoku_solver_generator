@@ -15,9 +15,10 @@ struct sudoku
 		int solvedArray[9][9]; 
 		int numberSolutions;
 		vector<vector < node*> >  solutions;
+		int blankCells; 
 
 		// *** Basic sudoku array functions ***
-		void importSudoku();
+		void importSudoku(string fileName);
 		void copyArray(int array[9][9]);
 		void printSudoku();
 		void printSolvedSudoku();
@@ -26,8 +27,7 @@ struct sudoku
 		int getCellConstraintColumn(int row, int col); 
 		int getRowConstraintColumn(int row, int value);
 		int getColConstraintColumn(int col, int value);
-		int getBoxConstraintColumn(int row, int col, int value);
-		//get value 
+		int getBoxConstraintColumn(int row, int col, int value); 
 		int getValue(int linkedListRow);
 	
 		void enableRow(int rowIndex);

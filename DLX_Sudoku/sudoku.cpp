@@ -7,24 +7,24 @@ using namespace std;
 
 
 // *** Basic sudoku array functions ***
-void sudoku::importSudoku()
+void sudoku::importSudoku(string fileName)
 {
-		string fileName;
-		ifstream inFile;
-		cout << "Enter file name here" << endl;
-		cin >> fileName;
-		inFile.open(fileName);
-		if (!inFile.is_open())
-		{
-			cout << "Error. File not imported" << endl;
-			return;
+	ifstream inFile;
+	inFile.open(fileName);
+	int temp; 
+	if (!inFile.is_open())
+	{
+		cout << "Error:  File not imported" << endl;
+		return;
+	}
+	for (int row = 0; row < 9; row++) 
+	{
+		for (int col = 0; col < 9; col++) {
+			inFile >> temp; 
+			if (temp <= 9 && temp > 0) sudokuArray[row][col] = temp;
+			else sudokuArray[row][col] = 0;  
 		}
-		for (int row = 0; row < 9; row++) 
-		{
-			for (int col = 0; col < 9; col++) {
-				inFile >> sudokuArray[row][col];
-			}
-		}
+	}
 
 }
 
@@ -43,14 +43,19 @@ void sudoku::copyArray(int array[9][9])
 void sudoku::printSudoku()
 {
 	cout << "\n";
+	cout << " -------+-------+-------" << endl;
 	for (int row = 0; row < 9; row++)
 	{
+		cout << "| ";
 		for (int col = 0; col < 9; col++)
 		{
-			if (sudokuArray[row][col] > 0 && sudokuArray[row][col] <= 9) cout << sudokuArray[row][col];
-			else cout << " "; 
+			if (sudokuArray[row][col] > 0 && sudokuArray[row][col] <= 9) cout << sudokuArray[row][col] << " ";
+			else cout << "  "; 
+			if (col % 3 == 2) cout << "| ";
 		}
 		cout << "\n";
+		if (row % 3 == 2) cout << " -------+-------+-------" << "\n";
+
 	}
 
 }
@@ -58,14 +63,19 @@ void sudoku::printSudoku()
 void sudoku::printSolvedSudoku()
 {
 	cout << "\n";
+	cout << " -------+-------+-------" << endl;
 	for (int row = 0; row < 9; row++)
 	{
+		cout << "| ";
 		for (int col = 0; col < 9; col++)
 		{
-			if (solvedArray[row][col] > 0 && solvedArray[row][col] <= 9) cout << solvedArray[row][col];
-			else cout << " ";
+			if (solvedArray[row][col] > 0 && solvedArray[row][col] <= 9) cout << solvedArray[row][col] << " ";
+			else cout << "  ";
+			if (col % 3 == 2) cout << "| ";
 		}
 		cout << "\n";
+		if (row % 3 == 2) cout << " -------+-------+-------" << "\n";
+
 	}
 }
 
@@ -99,13 +109,11 @@ node* sudoku::sudokuECMCreate()
 	node* last = NULL;
 	int dlxMatrixRow = 0;
 
-	cout << "creating headers\n";
 	for (int col = 0; col < 324; col++)
 	{
 		dlxHead = initHeader(dlxRoot, col);
 		columns[col] = dlxHead;
 	}
-	cout << "headers creater\n";
 
 	for (int row = 0; row < 9; row++)
 	{
@@ -302,7 +310,12 @@ void sudoku::printSolutions()
 
 bool sudoku::eraseCells(int index, int blankCells, int targetNum, vector<int>* cells)
 {
-	if ( blankCells == targetNum) return true;
+	cout << "blank cells: " << blankCells << "\n"; 
+	if (blankCells == targetNum)
+	{
+		cout << "Blank cells = target: " << targetNum << "\n";
+		return true;
+	}
 	if (index == 81) return false; 
 
 	int row = (*cells)[index] / 9; 
@@ -310,16 +323,17 @@ bool sudoku::eraseCells(int index, int blankCells, int targetNum, vector<int>* c
 	int value = sudokuArray[row][col];  
 	sudokuArray[row][col] = 0; 
 	
-	blankCells++; 
+	blankCells++;
 	index++; 
 	while (index != 81)
 	{
 		sudokuECMInit();
-		clearAllSolutions(); 
+		clearAllSolutions();
+		root = sudokuECMCreate();
+		sudokuECMInit();
 		dlxSolve(root, 0);
-
 		solutions = getAllSolutions();
-		numberSolutions = solutions.size(); 
+		numberSolutions = solutions.size();
 		if (numberSolutions > 1) return false; 
 		if(eraseCells(index, blankCells, targetNum, cells)) return true;
 		index++; 
@@ -338,7 +352,6 @@ void sudoku::solveSudoku()
 	solutions = getAllSolutions();
 	numberSolutions = solutions.size();
 	solutionToSudoku(&solutions[0]);
-	cout << "num Solutions " << numberSolutions << "\n"; 
 }
 
 void sudoku::generateRandomSudoku(int targetNum)
@@ -350,7 +363,7 @@ void sudoku::generateRandomSudoku(int targetNum)
 	numberSolutions = NULL;
 	root = sudokuECMCreate();
 	randomECMInit();
-	dlxGetOneSolution(root, 0);
+	dlxGetRandomSolution(root, 0);
 	solutions = getAllSolutions();
 	solutionToSudoku(&solutions[0]);
 	numberSolutions = solutions.size();

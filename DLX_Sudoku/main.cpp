@@ -42,14 +42,33 @@ int main()
 
 	sudoku sudokuA; 
 	sudoku sudokuB;
-	sudokuA.generateRandomSudoku(64);
-	sudokuA.printSudoku();
-	sudokuA.printSolvedSudoku();
+	sudoku sudokuC; 
+	
 
-	// sudokuA.printSolutions(); 
-	/*sudokuB.copyArray(testArray);
-	sudokuB.solveSudoku();
-	sudokuB.printSolutions();*/
+	//Generate a random sudoku puzzle with a solution
+	cout << "Sudoku A\n"; 
+	sudokuA.generateRandomSudoku(60);
+	sudokuA.printSudoku();
+
+	sudokuA.solveSudoku(); 
+	cout << " test\n"; 
+	sudokuA.printSolvedSudoku();
+	sudokuA.solveSudoku(); 
+	sudokuA.printSolutions(); 
+
+	////Solve a puzzle from a given array
+	//cout << "Sudoku B\n"; 
+	//sudokuB.copyArray(testArray);
+	//sudokuB.solveSudoku();
+	//sudokuB.printSolutions();
+
+	////Solve a sudoku puzzle from an imported txt file
+	//cout << "Sudoku C\n"; 
+	//sudokuC.importSudoku("sudoku1.txt");
+	//sudokuC.printSudoku();
+	//sudokuC.solveSudoku(); 
+	//sudokuC.printSolutions();
+
 
 	return 0;
 }
