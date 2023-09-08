@@ -33,8 +33,8 @@ Here are the basic steps of the algorithm X.
 2. Choose a column. 
 3. Cycle through each row in the column. Assume this row is part of the solution. Since it is part of the solution, cover up this column. Additionally, cover up any row that fulfills the same requirements as this row. Cover up any columns that are fulfilled by these rows. 
 4. Continue, recursively, until either you get to a column that does not have any elements in the rows beneath it, or there are no more columns left. 
- - If the column does not have any elements in the rows beneath it, this solution is not possible. Backtrack from there. 
- - If there are no more columns left uncovered, that means that all the requirements have been fulfilled. Store this current, valid solution, and backtrack. (The algorithm will continue to cycle through other possible solutions until all are found). 
+- - If the column does not have any elements in the rows beneath it, this solution is not possible. Backtrack from there. 
+  - If there are no more columns left uncovered, that means that all the requirements have been fulfilled. Store this current, valid solution, and backtrack. (The algorithm will continue to cycle through other possible solutions until all are found). 
 
 
 ## Stretch goals
